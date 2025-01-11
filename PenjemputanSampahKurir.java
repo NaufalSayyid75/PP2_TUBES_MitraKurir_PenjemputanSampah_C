@@ -116,7 +116,6 @@ public class PenjemputanSampahKurir extends JFrame {
             e.printStackTrace();
         }
     }
-    //tambah kodingan dibawah command ini
 
     private void hapusData() {
         int row = tblData.getSelectedRow();
@@ -168,7 +167,58 @@ public class PenjemputanSampahKurir extends JFrame {
             e.printStackTrace();
         }
     }
-    //tambah kodingan diatas command ini
+
+    private void ubahData() {
+        int row = tblData.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data yang ingin diubah.");
+            return;
+        }
+
+        int id = Integer.parseInt(model.getValueAt(row, 0).toString());
+        String nama = txtNama.getText();
+        String alamat = txtAlamat.getText();
+        String jenis = txtJenis.getText();
+        String deskripsi = txtDeskripsi.getText();
+        String tanggal = txtTanggal.getText();
+        String status = txtStatus.getText();
+
+        if (nama.isEmpty() || alamat.isEmpty() || jenis.isEmpty() || deskripsi.isEmpty() || tanggal.isEmpty() || status.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Semua data harus diisi.");
+            return;
+        }
+
+        try {
+            List<String> lines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                if (Integer.parseInt(data[0]) == id) {
+                    lines.add(id + "," + nama + "," + alamat + "," + jenis + "," + deskripsi + "," + tanggal + "," + status);
+                } else {
+                    lines.add(line);
+                }
+            }
+            reader.close();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME));
+            for (String l : lines) {
+                writer.write(l);
+                writer.newLine();
+            }
+            writer.close();
+
+            JOptionPane.showMessageDialog(this, "Data berhasil diubah.");
+            lihatData();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Gagal mengubah data.");
+            e.printStackTrace();
+        }
+    }
+
+    
 
    private int getNextId() {
         int id = 1;
