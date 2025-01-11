@@ -118,7 +118,42 @@ public class PenjemputanSampahKurir extends JFrame {
     }
     //tambah kodingan dibawah command ini
 
+    private void hapusData() {
+        int row = tblData.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Pilih data yang ingin dihapus.");
+            return;
+        }
 
+        int id = Integer.parseInt(model.getValueAt(row, 0).toString());
+
+        try {
+            List<String> lines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                if (Integer.parseInt(data[0]) != id) {
+                    lines.add(line);
+                }
+            }
+            reader.close();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME));
+            for (String l : lines) {
+                writer.write(l);
+                writer.newLine();
+            }
+            writer.close();
+
+            JOptionPane.showMessageDialog(this, "Data berhasil dihapus.");
+            lihatData();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Gagal menghapus data.");
+            e.printStackTrace();
+        }
+    }
 
     //tambah kodingan diatas command ini
 
